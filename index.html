@@ -289,7 +289,7 @@ const CONFIG = {
   season: "2026 NFL Season",
   startWeek: 11,                    // first week on the record
   currentWeek: 11,                  // the week shown on the front page
-  stake: 1000,                      // dollars on every bet
+  stakes: { best: 1000, parlay: 250 }, // set dollar amount for each ticket, every week
   maxFavorite: -200,                // best bet can't be a heavier favorite than this
   parlayMinLegs: 3,                 // fewest legs allowed in a parlay
   parlayMinOdds: 300                // parlay has to pay at least this much
@@ -385,15 +385,16 @@ WEEKS.forEach(w => {
   });
 });
 BETS.forEach(b => {
-  b.toWin = CONFIG.stake * (toDec(b.odds) - 1);
-  b.profit = b.result === "win" ? CONFIG.stake * (b.dec - 1) : b.result === "loss" ? -CONFIG.stake : 0;
+  b.stake = CONFIG.stakes[b.type];
+  b.toWin = b.stake * (toDec(b.odds) - 1);
+  b.profit = b.result === "win" ? b.stake * (b.dec - 1) : b.result === "loss" ? -b.stake : 0;
 });
 
 function stats(list) {
   const s = { win: 0, loss: 0, push: 0, pending: 0, profit: 0, staked: 0 };
   list.forEach(b => {
     s[b.result]++;
-    if (b.result !== "pending") { s.profit += b.profit; s.staked += b.result === "push" ? 0 : CONFIG.stake; }
+    if (b.result !== "pending") { s.profit += b.profit; s.staked += b.result === "push" ? 0 : b.stake; }
   });
   s.decided = s.win + s.loss;
   s.rate = s.decided ? s.win / s.decided : 0;
@@ -413,7 +414,7 @@ document.getElementById("tagline").innerHTML =
   `<span class="c-${p1.key}">${esc(p1.name)}</span> vs <span class="c-${p2.key}">${esc(p2.name)}</span>. A best bet and a parlay each, every week, on the record.`;
 document.getElementById("footer").textContent =
   names.join(" vs ") + " · " + CONFIG.season + " · Tracking started Week " + CONFIG.startWeek +
-  " · Results are tracked at a flat " + fmtMoney(CONFIG.stake, false) + " per bet for illustration. No real money is managed by this site.";
+  " · Results are tracked at a flat " + fmtMoney(CONFIG.stakes.best, false) + " per best bet and " + fmtMoney(CONFIG.stakes.parlay, false) + " per parlay for illustration. No real money is managed by this site.";
 
 /* ---------- This week ---------- */
 document.getElementById("weekTitle").innerHTML = "Week <em>" + CONFIG.currentWeek + "</em>";
@@ -447,8 +448,8 @@ function ticketHTML(b) {
       ${body}
     </div>
     <dl class="stub">
-      <div><dt>Stake</dt><dd>${fmtMoney(CONFIG.stake, false)}</dd></div>
-      <div><dt>Payout</dt><dd>${fmtMoney(CONFIG.stake + b.toWin, false)}</dd></div>
+      <div><dt>Stake</dt><dd>${fmtMoney(b.stake, false)}</dd></div>
+      <div><dt>Payout</dt><dd>${fmtMoney(b.stake + b.toWin, false)}</dd></div>
       <div><dt>${outcome[0]}</dt><dd class="${b.result === "pending" ? "" : cls(b.profit)}">${outcome[1]}</dd></div>
     </dl>
     ${b.posted ? `<div class="stamp">${clock}<span>Locked ${fmtWhen(b.posted)}${b.kickoff ? " · " + leadTime(b.posted, b.kickoff) : ""}</span></div>` : ""}
@@ -462,7 +463,7 @@ function emptyTicket(who, type) {
     ${kindBar(who, type, '<span class="pill open">Not posted</span>')}
     <div class="top">${lockIcon}<div class="pick">Coming before kickoff</div><div class="game">${note}</div></div>
     <dl class="stub">
-      <div><dt>Stake</dt><dd>${fmtMoney(CONFIG.stake, false)}</dd></div>
+      <div><dt>Stake</dt><dd>${fmtMoney(CONFIG.stakes[type], false)}</dd></div>
       <div><dt>Odds</dt><dd>TBD</dd></div>
       <div><dt>To win</dt><dd>TBD</dd></div>
     </dl>
@@ -486,7 +487,7 @@ CONFIG.players.forEach(p => {
   const mine = BETS.filter(b => b.who === p.key);
   S[p.key] = { all: stats(mine), best: stats(mine.filter(b => b.type === "best")), parlay: stats(mine.filter(b => b.type === "parlay")) };
 });
-document.getElementById("stakeNote").textContent = "If we put " + fmtMoney(CONFIG.stake, false) + " on every bet";
+document.getElementById("stakeNote").textContent = fmtMoney(CONFIG.stakes.best, false) + " on every best bet, " + fmtMoney(CONFIG.stakes.parlay, false) + " on every parlay";
 const diff = S[p1.key].all.profit - S[p2.key].all.profit;
 const anySettled = CONFIG.players.some(p => { const a = S[p.key].all; return a.win + a.loss + a.push > 0; });
 document.getElementById("leader").innerHTML = !anySettled
@@ -571,7 +572,7 @@ document.getElementById("rules").innerHTML = [
   ["Best bet limit", "No favorite heavier than " + fmtOdds(CONFIG.maxFavorite) + ". At that price you need to win " + breakEvenText(CONFIG.maxFavorite) + " to break even."],
   ["Parlay minimum", "At least " + CONFIG.parlayMinLegs + " legs, and the parlay has to pay " + fmtOdds(CONFIG.parlayMinOdds) + " or better."],
   ["No insurance", "No parlay insurance or injury protection. If a leg loses, the parlay loses."],
-  ["Flat stake", "The full " + fmtMoney(CONFIG.stake, false) + " on every ticket, every week. Win or lose. No chasing."]
+  ["Set stakes", fmtMoney(CONFIG.stakes.best, false) + " on every best bet and " + fmtMoney(CONFIG.stakes.parlay, false) + " on every parlay, every week. No more, no less. Pick any bet you want, but the dollar amount never changes."]
 ].map(([t, d]) => `<div class="rule"><b>${t}</b><span>${d}</span></div>`).join("");
 
 /* ---------- History ---------- */
