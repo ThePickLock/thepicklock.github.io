@@ -6,44 +6,30 @@
 <title>PickLock</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-/* Layout idea: a sportsbook ticket stub for this week up top, the season ledger below. Quiet page, loud numbers. */
+/* Layout idea: night game look. Two columns face off, Collin in Steelers gold on the left, Evan in Bears blue on the right, orange for the brand. */
 :root {
-  --bg: #eef1f4;
-  --surface: #ffffff;
-  --ink: #131c25;
-  --muted: #5b6876;
-  --line: #d9e0e7;
-  --accent: #1d4ed8;
-  --accent-soft: #e3eafc;
-  --win: #157a3c;
-  --win-soft: #e2f3e8;
-  --loss: #b42323;
-  --loss-soft: #f8e4e4;
-  --pending: #a15c07;
-  --pending-soft: #fbefdc;
-  --push: #5b6876;
-  --push-soft: #eceff2;
+  --bg: #0a1424;
+  --header: #050b16;
+  --surface: #122038;
+  --surface-2: #0e1a2e;
+  --ink: #eef2f8;
+  --muted: #94a3ba;
+  --line: #23365a;
+  --black: #000000;
+  --orange: #ff6a1a;
+  --collin: #ffb612;
+  --evan: #6ea8ff;
+  --win: #4ade80;
+  --win-soft: rgba(74, 222, 128, 0.14);
+  --loss: #f87171;
+  --loss-soft: rgba(248, 113, 113, 0.14);
+  --pending: #d5dceb;
+  --pending-soft: rgba(213, 220, 235, 0.12);
   --display: "Barlow Condensed", "Arial Narrow", sans-serif;
   --body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
-  color-scheme: light;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #0d1318; --surface: #151d25; --ink: #e5ebf1; --muted: #8b98a6; --line: #26313c;
-    --accent: #7097ff; --accent-soft: #1a2747;
-    --win: #45c27a; --win-soft: #12291c; --loss: #f07070; --loss-soft: #321717;
-    --pending: #e8a948; --pending-soft: #2e2311; --push: #9aa6b2; --push-soft: #1f272f;
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --bg: #0d1318; --surface: #151d25; --ink: #e5ebf1; --muted: #8b98a6; --line: #26313c;
-  --accent: #7097ff; --accent-soft: #1a2747;
-  --win: #45c27a; --win-soft: #12291c; --loss: #f07070; --loss-soft: #321717;
-  --pending: #e8a948; --pending-soft: #2e2311; --push: #9aa6b2; --push-soft: #1f272f;
   color-scheme: dark;
 }
 
@@ -57,81 +43,106 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
-.wrap { max-width: 1040px; margin: 0 auto; padding: 0 20px; }
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
 h1, h2, h3 { font-family: var(--display); font-weight: 700; letter-spacing: 0.01em; margin: 0; text-wrap: balance; }
 .num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
 
 /* Header */
-header { border-bottom: 1px solid var(--line); background: var(--surface); }
-.bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 0; flex-wrap: wrap; }
-.brand { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
-.brand h1 { font-size: 30px; text-transform: uppercase; line-height: 1; }
-.brand h1 span { color: var(--accent); }
+header { background: var(--header); border-bottom: 4px solid var(--orange); }
+.bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 0; flex-wrap: wrap; }
+.brand { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+.brand h1 { font-size: 44px; font-weight: 800; text-transform: uppercase; line-height: 1; letter-spacing: 0.03em; }
+.brand h1 .w1 {
+  color: var(--black);
+  text-shadow:
+    2px 0 0 #fff, -2px 0 0 #fff, 0 2px 0 #fff, 0 -2px 0 #fff,
+    1.5px 1.5px 0 #fff, -1.5px -1.5px 0 #fff, 1.5px -1.5px 0 #fff, -1.5px 1.5px 0 #fff;
+}
+.brand h1 .w2 { color: var(--orange); }
 .brand p { margin: 0; color: var(--muted); font-size: 14px; }
-nav { display: flex; gap: 4px; background: var(--bg); padding: 4px; border-radius: 10px; }
+nav { display: flex; gap: 4px; background: var(--surface); padding: 4px; border-radius: 10px; }
 nav a {
   font-family: var(--display); font-weight: 600; font-size: 17px; text-transform: uppercase; letter-spacing: 0.04em;
   color: var(--muted); text-decoration: none; padding: 6px 14px; border-radius: 7px;
 }
-nav a[aria-current="page"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
-nav a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.sample { background: var(--pending-soft); color: var(--pending); font-size: 13px; text-align: center; padding: 6px 12px; }
+nav a[aria-current="page"] { background: var(--orange); color: #111; }
+nav a:focus-visible, button:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
 
-main { padding: 28px 0 56px; display: grid; gap: 32px; }
+main { padding: 28px 0 56px; display: grid; gap: 34px; }
 .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
-.section-head h2 { font-size: 24px; text-transform: uppercase; }
+.section-head h2 { font-size: 28px; text-transform: uppercase; }
+.section-head h2 em { font-style: normal; color: var(--orange); }
 .section-head p { margin: 0; color: var(--muted); font-size: 14px; }
 
+/* Who colors */
+.c-collin { color: var(--collin); }
+.c-evan { color: var(--evan); }
+.c-parlay { color: var(--orange); }
+
 /* Tickets */
-.tickets { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; }
-.ticket { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; display: flex; flex-direction: column; position: relative; }
+.tickets { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
+.col { display: grid; gap: 14px; align-content: start; }
+.col-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; border-bottom: 3px solid var(--who); padding-bottom: 6px; }
+.col.collin { --who: var(--collin); }
+.col.evan { --who: var(--evan); }
+.col-head h3 { font-size: 30px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; color: var(--who); line-height: 1; }
+.col-head span { font-size: 14px; }
+.ticket { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; display: flex; flex-direction: column; overflow: hidden; border-top: 4px solid var(--who, var(--orange)); }
+.ticket.collin { --who: var(--collin); }
+.ticket.evan { --who: var(--evan); }
+.ticket.parlay { --who: var(--orange); }
+.ticket .kind { background: var(--black); display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 12px 20px; }
+.ticket .kind .who { font-family: var(--display); font-weight: 700; font-size: 20px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--who); line-height: 1.1; }
+.ticket .kind .who small { display: block; font-size: 13px; color: var(--muted); letter-spacing: 0.08em; }
 .ticket .top { padding: 18px 20px 16px; display: grid; gap: 10px; flex: 1; align-content: start; }
-.ticket .kind { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-.ticket .kind span:first-child { font-family: var(--display); font-weight: 700; font-size: 18px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent); }
 .ticket .pick { font-size: 22px; font-weight: 600; line-height: 1.25; }
 .ticket .game { color: var(--muted); font-size: 14px; }
-.ticket .odds { font-family: var(--mono); font-size: 40px; font-weight: 600; line-height: 1; }
+.ticket .odds { font-family: var(--mono); font-size: 42px; font-weight: 600; line-height: 1; }
+.ticket.empty .top { place-content: center; text-align: center; min-height: 180px; gap: 6px; }
+.ticket.empty .lock { width: 40px; height: 40px; margin: 0 auto 6px; color: var(--who); }
+.ticket.empty .pick { font-size: 20px; }
 .legs { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
 .legs li { display: grid; grid-template-columns: 22px 1fr auto; gap: 10px; align-items: start; font-size: 15px; }
-.legs .dot { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 600; background: var(--push-soft); color: var(--muted); margin-top: 1px; }
+.legs .dot { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 600; background: var(--pending-soft); color: var(--muted); margin-top: 1px; }
 .legs .dot.win { background: var(--win-soft); color: var(--win); }
 .legs .dot.loss { background: var(--loss-soft); color: var(--loss); }
 .legs .game { display: block; font-size: 13px; }
-.stub {
-  border-top: 2px dashed var(--line); padding: 14px 20px 16px; display: grid; grid-template-columns: repeat(3, auto); justify-content: space-between; gap: 12px;
-}
-.ticket::before, .ticket::after {
-  content: ""; position: absolute; width: 18px; height: 18px; border-radius: 50%; background: var(--bg);
-  border: 1px solid var(--line); bottom: var(--notch, 64px);
-}
-.ticket::before { left: -10px; clip-path: inset(0 0 0 50%); }
-.ticket::after { right: -10px; clip-path: inset(0 50% 0 0); }
+.stub { border-top: 2px dashed var(--line); padding: 14px 20px; display: grid; grid-template-columns: repeat(3, auto); justify-content: space-between; gap: 12px; margin: 0; background: var(--surface-2); }
 .stub dt { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
 .stub dd { margin: 2px 0 0; font-family: var(--mono); font-size: 15px; font-variant-numeric: tabular-nums; }
 .stub div:last-child { text-align: right; }
-.stamp { font-size: 13px; color: var(--muted); padding: 0 20px 16px; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
-.stamp svg { flex: none; }
+.stamp { font-size: 13px; color: var(--muted); padding: 0 20px 14px; display: grid; grid-template-columns: 14px 1fr; gap: 8px; align-items: start; background: var(--surface-2); }
+.stamp svg { margin-top: 3px; }
+.stamp svg { flex: none; color: var(--who); }
 
 .pill { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 3px 10px; border-radius: 999px; white-space: nowrap; }
 .pill.win { background: var(--win-soft); color: var(--win); }
 .pill.loss { background: var(--loss-soft); color: var(--loss); }
 .pill.pending { background: var(--pending-soft); color: var(--pending); }
-.pill.push { background: var(--push-soft); color: var(--push); }
+.pill.push { background: var(--pending-soft); color: var(--muted); }
+.pill.open { background: #1b2232; color: #9aa4b6; }
 .flag { font-size: 12px; color: var(--loss); }
 
-/* Scoreboard */
-.board { display: grid; grid-template-columns: 1.25fr 1fr 1fr; gap: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
-.board > div { padding: 20px; display: grid; gap: 14px; align-content: start; }
+/* Head to head */
+.leader { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; background: var(--black); border: 1px solid var(--line); border-radius: 14px 14px 0 0; padding: 12px 20px; font-family: var(--display); font-size: 22px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; text-align: center; }
+.board { display: grid; grid-template-columns: 1fr 1fr; background: var(--surface); border: 1px solid var(--line); border-top: 0; border-radius: 0 0 14px 14px; overflow: hidden; }
+.board > div { padding: 20px; display: grid; gap: 14px; align-content: start; border-top: 4px solid var(--who); }
 .board > div + div { border-left: 1px solid var(--line); }
-.board h3 { font-size: 17px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
-.board .big { font-family: var(--mono); font-size: 40px; font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums; }
-.board .mid { font-family: var(--mono); font-size: 28px; font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums; }
+.board .collin { --who: var(--collin); }
+.board .evan { --who: var(--evan); }
+.board .parlay { --who: var(--orange); }
+.board h3 { font-size: 20px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--who); }
+.board .big { font-family: var(--mono); font-size: 36px; font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums; }
 .board dl { display: grid; grid-template-columns: auto auto; gap: 6px 16px; margin: 0; font-size: 14px; }
 .board dt { color: var(--muted); }
 .board dd { margin: 0; text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; }
 .pos { color: var(--win); }
 .neg { color: var(--loss); }
-.caption { font-size: 13px; color: var(--muted); margin: 0; }
+.board .split { display: grid; gap: 6px; border-top: 1px solid var(--line); padding-top: 12px; }
+.board .split div { display: grid; grid-template-columns: 1fr auto 90px; gap: 12px; font-size: 14px; }
+.board .split .t { color: var(--muted); }
+.board .split div span:last-child { text-align: right; }
+.caption { font-size: 13px; color: var(--muted); margin: 10px 0 0; }
 
 /* Chart */
 .chart-card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px 12px; }
@@ -140,11 +151,12 @@ main { padding: 28px 0 56px; display: grid; gap: 32px; }
 .legend i { width: 16px; height: 3px; border-radius: 2px; display: inline-block; }
 #chart { width: 100%; height: auto; display: block; }
 #chart text { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+#chart text.empty-msg { font-family: var(--body); font-size: 15px; }
 
 /* Rules */
-.rules { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
-.rule { border-left: 3px solid var(--accent); background: var(--surface); padding: 12px 16px; border-radius: 0 10px 10px 0; }
-.rule b { display: block; font-family: var(--display); font-size: 17px; text-transform: uppercase; letter-spacing: 0.04em; }
+.rules { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+.rule { border-left: 4px solid var(--orange); background: var(--surface); padding: 12px 16px; border-radius: 0 10px 10px 0; }
+.rule b { display: block; font-family: var(--display); font-size: 18px; text-transform: uppercase; letter-spacing: 0.04em; }
 .rule span { font-size: 14px; color: var(--muted); }
 
 /* History */
@@ -153,18 +165,20 @@ main { padding: 28px 0 56px; display: grid; gap: 32px; }
   font: 500 14px var(--body); color: var(--muted); background: var(--surface); border: 1px solid var(--line);
   border-radius: 999px; padding: 5px 14px; cursor: pointer;
 }
-.filters button[aria-pressed="true"] { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+.filters button[aria-pressed="true"] { background: var(--orange); color: #111; border-color: var(--orange); }
 .table-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; }
 table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 760px; }
-th { text-align: left; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); padding: 12px 14px; border-bottom: 1px solid var(--line); }
+th { text-align: left; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); background: var(--black); padding: 12px 14px; }
 td { padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
-tr:last-child td { border-bottom: 0; }
+tbody tr:last-child td { border-bottom: 0; }
 td.r, th.r { text-align: right; }
 td.nw { white-space: nowrap; }
+td .who { font-family: var(--display); font-size: 17px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
 td .sub { display: block; color: var(--muted); font-size: 13px; }
-tfoot td { font-weight: 600; background: var(--bg); }
-.totals { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
-.tile { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+td.empty-row { text-align: center; color: var(--muted); padding: 36px 14px; }
+tfoot td { font-weight: 600; background: var(--surface-2); border-top: 1px solid var(--line); }
+.totals { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 0; }
+.tile { background: var(--surface); border: 1px solid var(--line); border-top: 3px solid var(--orange); border-radius: 12px; padding: 14px 16px; }
 .tile dt { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
 .tile dd { margin: 4px 0 0; font-family: var(--mono); font-size: 24px; font-weight: 600; font-variant-numeric: tabular-nums; }
 
@@ -173,11 +187,13 @@ footer { color: var(--muted); font-size: 13px; padding: 0 0 40px; }
 [hidden] { display: none !important; }
 
 @media (max-width: 760px) {
+  .tickets { grid-template-columns: 1fr; }
   .board { grid-template-columns: 1fr; }
-  .board > div + div { border-left: 0; border-top: 1px solid var(--line); }
+  .board > div + div { border-left: 0; }
 }
 @media (max-width: 420px) {
   .wrap { padding: 0 16px; }
+  .brand h1 { font-size: 36px; }
   .ticket .odds { font-size: 34px; }
   .stub { grid-template-columns: 1fr 1fr; }
   .stub div:last-child { text-align: left; }
@@ -188,10 +204,9 @@ footer { color: var(--muted); font-size: 13px; padding: 0 0 40px; }
 <body>
 
 <header>
-  <div class="sample" id="sampleBanner" hidden>Sample data shown. Replace it with your real picks before you share the site.</div>
   <div class="wrap bar">
     <div class="brand">
-      <h1 id="siteName">Pick<span>Lock</span></h1>
+      <h1 id="siteName"><span class="w1">Pick</span><span class="w2">Lock</span></h1>
       <p id="tagline"></p>
     </div>
     <nav aria-label="Pages">
@@ -213,19 +228,20 @@ footer { color: var(--muted); font-size: 13px; padding: 0 0 40px; }
 
     <section>
       <div class="section-head">
-        <h2>Season Scoreboard</h2>
+        <h2>Head to Head</h2>
         <p id="stakeNote"></p>
       </div>
+      <div class="leader" id="leader"></div>
       <div class="board" id="board"></div>
     </section>
 
     <section class="chart-card">
       <div class="section-head" style="margin-bottom:6px">
         <h2>Running Profit</h2>
-        <p>Cumulative winnings after each week</p>
+        <p>Total winnings after each week</p>
       </div>
       <div class="legend" id="legend"></div>
-      <svg id="chart" viewBox="0 0 960 300" role="img" aria-label="Cumulative profit by week"></svg>
+      <svg id="chart" viewBox="0 0 960 300" role="img" aria-label="Running profit by week"></svg>
     </section>
 
     <section>
@@ -238,11 +254,7 @@ footer { color: var(--muted); font-size: 13px; padding: 0 0 40px; }
     <section>
       <div class="section-head">
         <h2>All Bets</h2>
-        <div class="filters" id="filters">
-          <button type="button" id="f-all" data-f="all" aria-pressed="true">All</button>
-          <button type="button" id="f-best" data-f="best" aria-pressed="false">Best Bets</button>
-          <button type="button" id="f-parlay" data-f="parlay" aria-pressed="false">Parlays</button>
-        </div>
+        <div class="filters" id="filters"></div>
       </div>
       <dl class="totals" id="histTotals"></dl>
     </section>
@@ -250,7 +262,7 @@ footer { color: var(--muted); font-size: 13px; padding: 0 0 40px; }
       <table>
         <thead>
           <tr>
-            <th>Week</th><th>Posted</th><th>Type</th><th>Pick</th>
+            <th>Week</th><th>Posted</th><th>Who</th><th>Pick</th>
             <th class="r">Odds</th><th>Result</th><th class="r">Profit</th><th class="r">Running</th>
           </tr>
         </thead>
@@ -265,77 +277,47 @@ footer { color: var(--muted); font-size: 13px; padding: 0 0 40px; }
 
 <script>
 /* =========================================================
-   SETTINGS: change these to make the site yours
+   SETTINGS
    ========================================================= */
 const CONFIG = {
-  firstWord: "Pick",                // site name, first part
-  secondWord: "Lock",               // site name, highlighted part
-  hosts: "Collin & Buddy",          // who is picking
+  firstWord: "Pick",                // shown in black with a white outline
+  secondWord: "Lock",               // shown in orange
+  players: [
+    { key: "collin", name: "Collin", team: "Steelers" },
+    { key: "evan",   name: "Evan",   team: "Bears" }
+  ],
   season: "2026 NFL Season",
+  startWeek: 11,                    // first week on the record
+  currentWeek: 11,                  // the week shown on the front page
   stake: 1000,                      // dollars on every bet
-  maxFavorite: -150,                // best bet can't be a heavier favorite than this
-  parlayLegs: "2 or 3",
-  parlayTarget: 250,                // the parlay price you're aiming near
-  sampleData: true                  // set to false once these are your real picks
+  maxFavorite: -200,                // best bet can't be a heavier favorite than this
+  parlayMinLegs: 3,                 // fewest legs allowed in a parlay
+  parlayMinOdds: 300                // parlay has to pay at least this much
 };
 
 /* =========================================================
    THE PICKS: add one block per week, newest at the bottom.
+   Each of you gets a best bet and a parlay.
    result: "pending", "win", "loss", or "push"
    posted / kickoff: "YYYY-MM-DDTHH:MM" in Eastern time
-   Parlay odds and results are calculated from the legs.
+   Leave out anything that wasn't posted that week.
+
+   Example of one week:
+   { week: 11,
+     collin: {
+       best:   { pick: "Steelers +3", game: "Steelers at Eagles", odds: -110,
+                 posted: "2026-11-22T10:15", kickoff: "2026-11-22T16:25", result: "pending" },
+       parlay: { posted: "2026-11-22T10:20", kickoff: "2026-11-22T13:00", legs: [
+         { pick: "Bills moneyline", game: "Dolphins at Bills", odds: -180, result: "pending" },
+         { pick: "Broncos -3", game: "Raiders at Broncos", odds: -110, result: "pending" } ] } },
+     evan: {
+       best:   { pick: "Bears -6.5", game: "Saints at Bears", odds: -110,
+                 posted: "2026-11-21T19:40", kickoff: "2026-11-22T13:00", result: "pending" },
+       parlay: { posted: "2026-11-21T19:45", kickoff: "2026-11-22T13:00", legs: [
+         { pick: "Ravens moneyline", game: "Ravens at Panthers", odds: -200, result: "pending" },
+         { pick: "Over 44.5", game: "Vikings at 49ers", odds: -110, result: "pending" } ] } } },
    ========================================================= */
 const WEEKS = [
-  { week: 1, posted: "2026-09-13T09:41",
-    best:   { pick: "Ravens moneyline", game: "Browns at Ravens", odds: -145, kickoff: "2026-09-13T13:00", result: "win" },
-    parlay: { legs: [
-      { pick: "Packers moneyline", game: "Bears at Packers", odds: -160, result: "win" },
-      { pick: "Chiefs −3", game: "Chargers at Chiefs", odds: -110, result: "loss" }
-    ], kickoff: "2026-09-13T13:00" } },
-  { week: 2, posted: "2026-09-20T10:05",
-    best:   { pick: "Lions −2.5", game: "Vikings at Lions", odds: -115, kickoff: "2026-09-20T13:00", result: "win" },
-    parlay: { legs: [
-      { pick: "Bills moneyline", game: "Jets at Bills", odds: -200, result: "win" },
-      { pick: "Eagles moneyline", game: "Giants at Eagles", odds: -175, result: "win" },
-      { pick: "49ers moneyline", game: "Cardinals at 49ers", odds: -150, result: "win" }
-    ], kickoff: "2026-09-20T13:00" } },
-  { week: 3, posted: "2026-09-27T11:18",
-    best:   { pick: "Texans moneyline", game: "Titans at Texans", odds: -150, kickoff: "2026-09-27T13:00", result: "loss" },
-    parlay: { legs: [
-      { pick: "Bengals −1.5", game: "Steelers at Bengals", odds: -110, result: "loss" },
-      { pick: "Over 47.5", game: "Rams at Seahawks", odds: -110, result: "win" }
-    ], kickoff: "2026-09-27T13:00" } },
-  { week: 4, posted: "2026-10-04T09:56",
-    best:   { pick: "Broncos −3", game: "Raiders at Broncos", odds: -120, kickoff: "2026-10-04T16:05", result: "win" },
-    parlay: { legs: [
-      { pick: "Commanders moneyline", game: "Cowboys at Commanders", odds: -135, result: "win" },
-      { pick: "Falcons moneyline", game: "Panthers at Falcons", odds: -180, result: "loss" }
-    ], kickoff: "2026-10-04T13:00" } },
-  { week: 5, posted: "2026-10-11T10:30",
-    best:   { pick: "Steelers +3.5", game: "Steelers at Ravens", odds: -110, kickoff: "2026-10-11T13:00", result: "win" },
-    parlay: { legs: [
-      { pick: "Lions moneyline", game: "Lions at Bears", odds: -170, result: "win" },
-      { pick: "Chiefs moneyline", game: "Broncos at Chiefs", odds: -155, result: "win" }
-    ], kickoff: "2026-10-11T13:00" } },
-  { week: 6, posted: "2026-10-18T09:12",
-    best:   { pick: "Buccaneers moneyline", game: "Saints at Buccaneers", odds: -140, kickoff: "2026-10-18T13:00", result: "loss" },
-    parlay: { legs: [
-      { pick: "Eagles −2.5", game: "Eagles at Commanders", odds: -105, result: "loss" },
-      { pick: "Under 44.5", game: "Jaguars at Colts", odds: -110, result: "win" }
-    ], kickoff: "2026-10-18T13:00" } },
-  { week: 7, posted: "2026-10-25T10:48",
-    best:   { pick: "Bills −3", game: "Bills at Patriots", odds: -118, kickoff: "2026-10-25T13:00", result: "push" },
-    parlay: { legs: [
-      { pick: "Packers −1", game: "Packers at Vikings", odds: -110, result: "win" },
-      { pick: "49ers moneyline", game: "49ers at Rams", odds: -125, result: "loss" }
-    ], kickoff: "2026-10-25T16:25" } },
-  { week: 8, posted: "2026-11-01T09:34",
-    best:   { pick: "Ravens −2.5", game: "Bengals at Ravens", odds: -125, kickoff: "2026-11-01T13:00", result: "pending" },
-    parlay: { legs: [
-      { pick: "Lions moneyline", game: "Packers at Lions", odds: -165, result: "pending" },
-      { pick: "Chargers moneyline", game: "Titans at Chargers", odds: -190, result: "pending" },
-      { pick: "Over 45.5", game: "Seahawks at Cardinals", odds: -110, result: "pending" }
-    ], kickoff: "2026-11-01T13:00" } }
 ];
 
 /* =========================================================
@@ -359,14 +341,18 @@ const fmtWhen = s => {
 };
 const fmtShortDate = s => parseT(s).toLocaleDateString("en-US", { month: "short", day: "numeric" });
 const leadTime = (posted, kickoff) => {
-  if (!kickoff) return "";
+  if (!kickoff || !posted) return "";
   const mins = Math.round((parseT(kickoff) - parseT(posted)) / 60000);
   if (mins <= 0) return "posted after kickoff";
   const h = Math.floor(mins / 60), m = mins % 60;
   return (h ? h + "h " : "") + m + "m before kickoff";
 };
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const niceText = s => esc(s).replace(/(\s)-(\d)/g, "$1" + MINUS + "$2");
 const label = { win: "Won", loss: "Lost", push: "Push", pending: "Pending" };
+const TYPE = { best: "Best Bet", parlay: "Parlay" };
+const NAME = {};
+CONFIG.players.forEach(p => NAME[p.key] = p.name);
 
 function parlayInfo(legs) {
   const live = legs.filter(l => l.result !== "push");
@@ -382,13 +368,21 @@ function parlayInfo(legs) {
 
 const BETS = [];
 WEEKS.forEach(w => {
-  const b = w.best;
-  BETS.push({ week: w.week, posted: w.posted, kickoff: b.kickoff, type: "best", pick: b.pick, game: b.game,
-              odds: b.odds, dec: toDec(b.odds), result: b.result });
-  const p = parlayInfo(w.parlay.legs);
-  BETS.push({ week: w.week, posted: w.posted, kickoff: w.parlay.kickoff, type: "parlay",
-              pick: w.parlay.legs.length + " leg parlay", legs: w.parlay.legs,
-              odds: p.odds, dec: p.settleDec, result: p.result });
+  CONFIG.players.forEach(p => {
+    const mine = w[p.key];
+    if (!mine) return;
+    if (mine.best) {
+      const b = mine.best;
+      BETS.push({ week: w.week, who: p.key, type: "best", posted: b.posted, kickoff: b.kickoff, pick: b.pick, game: b.game,
+                  odds: b.odds, dec: toDec(b.odds), result: b.result });
+    }
+    if (mine.parlay) {
+      const x = parlayInfo(mine.parlay.legs);
+      BETS.push({ week: w.week, who: p.key, type: "parlay", posted: mine.parlay.posted, kickoff: mine.parlay.kickoff,
+                  pick: mine.parlay.legs.length + " leg parlay", legs: mine.parlay.legs,
+                  odds: x.odds, dec: x.settleDec, result: x.result });
+    }
+  });
 });
 BETS.forEach(b => {
   b.toWin = CONFIG.stake * (toDec(b.odds) - 1);
@@ -401,46 +395,55 @@ function stats(list) {
     s[b.result]++;
     if (b.result !== "pending") { s.profit += b.profit; s.staked += b.result === "push" ? 0 : CONFIG.stake; }
   });
-  const decided = s.win + s.loss;
-  s.rate = decided ? s.win / decided : 0;
+  s.decided = s.win + s.loss;
+  s.rate = s.decided ? s.win / s.decided : 0;
   s.roi = s.staked ? s.profit / s.staked : 0;
   s.record = s.win + "–" + s.loss + (s.push ? "–" + s.push : "");
   return s;
 }
+const pct = s => (s.rate * 100).toFixed(1) + "%";
+const roiTxt = n => (n > 0 ? "+" : n < 0 ? MINUS : "") + Math.abs(n * 100).toFixed(1) + "%";
 
 /* ---------- Header ---------- */
-document.getElementById("siteName").innerHTML = esc(CONFIG.firstWord) + "<span>" + esc(CONFIG.secondWord) + "</span>";
-document.getElementById("tagline").textContent = "One best bet. One parlay. Every week, on the record.";
-document.getElementById("sampleBanner").hidden = !CONFIG.sampleData;
+const names = CONFIG.players.map(p => p.name);
+const [p1, p2] = CONFIG.players;
+document.getElementById("siteName").innerHTML =
+  '<span class="w1">' + esc(CONFIG.firstWord) + '</span><span class="w2">' + esc(CONFIG.secondWord) + '</span>';
+document.getElementById("tagline").innerHTML =
+  `<span class="c-${p1.key}">${esc(p1.name)}</span> vs <span class="c-${p2.key}">${esc(p2.name)}</span>. A best bet and a parlay each, every week, on the record.`;
 document.getElementById("footer").textContent =
-  CONFIG.hosts + " · " + CONFIG.season + " · Results are tracked at a flat " + fmtMoney(CONFIG.stake, false) +
-  " per bet for illustration. No real money is managed by this site.";
+  names.join(" vs ") + " · " + CONFIG.season + " · Tracking started Week " + CONFIG.startWeek +
+  " · Results are tracked at a flat " + fmtMoney(CONFIG.stake, false) + " per bet for illustration. No real money is managed by this site.";
 
 /* ---------- This week ---------- */
-const current = WEEKS[WEEKS.length - 1];
-document.getElementById("weekTitle").textContent = "Week " + current.week;
-document.getElementById("weekNote").textContent = "Posted " + fmtWhen(current.posted);
+document.getElementById("weekTitle").innerHTML = "Week <em>" + CONFIG.currentWeek + "</em>";
+const thisWeek = BETS.filter(b => b.week === CONFIG.currentWeek);
+document.getElementById("weekNote").textContent = thisWeek.length
+  ? thisWeek.length + " of " + (CONFIG.players.length * 2) + " tickets posted"
+  : "Picks lock in before kickoff";
 
 const clock = '<svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 4.5V8l2.5 1.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
+const lockIcon = '<svg class="lock" viewBox="0 0 24 24" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+const kindBar = (who, type, pill) => `<div class="kind"><span class="who">${esc(TYPE[type])}<small>${esc(NAME[who])}</small></span>${pill}</div>`;
 
 function ticketHTML(b) {
-  const isBest = b.type === "best";
-  const over = isBest && b.odds < CONFIG.maxFavorite;
+  const isParlay = b.type === "parlay";
+  const over = !isParlay && b.odds < CONFIG.maxFavorite;
+  const short = isParlay && (b.legs.length < CONFIG.parlayMinLegs || b.odds < CONFIG.parlayMinOdds);
   let body;
-  if (isBest) {
-    body = `<div class="pick">${esc(b.pick)}</div><div class="game">${esc(b.game)}</div>`;
+  if (!isParlay) {
+    body = `<div class="pick">${niceText(b.pick)}</div><div class="game">${esc(b.game)}</div>`;
   } else {
     body = `<ul class="legs">${b.legs.map(l => {
       const mark = l.result === "win" ? "✓" : l.result === "loss" ? "✕" : l.result === "push" ? "P" : "";
-      return `<li><span class="dot ${l.result}">${mark}</span><span>${esc(l.pick)}<span class="game">${esc(l.game)}</span></span><span class="num">${fmtOdds(l.odds)}</span></li>`;
+      return `<li><span class="dot ${l.result}">${mark}</span><span>${niceText(l.pick)}<span class="game">${esc(l.game)}</span></span><span class="num">${fmtOdds(l.odds)}</span></li>`;
     }).join("")}</ul>`;
   }
-  const outcome = b.result === "pending" ? ["To win", fmtMoney(b.toWin, false)]
-                : ["Result", fmtMoney(b.profit)];
-  return `<article class="ticket">
+  const outcome = b.result === "pending" ? ["To win", fmtMoney(b.toWin, false)] : ["Result", fmtMoney(b.profit)];
+  return `<article class="ticket ${b.who}">
+    ${kindBar(b.who, b.type, `<span class="pill ${b.result}">${label[b.result]}</span>`)}
     <div class="top">
-      <div class="kind"><span>${isBest ? "Best Bet" : "Parlay"}</span><span class="pill ${b.result}">${label[b.result]}</span></div>
-      <div class="odds">${fmtOdds(b.odds)}${over ? ' <span class="flag">over the ' + fmtOdds(CONFIG.maxFavorite) + ' limit</span>' : ""}</div>
+      <div class="odds">${fmtOdds(b.odds)}${over ? ' <span class="flag">over the ' + fmtOdds(CONFIG.maxFavorite) + ' limit</span>' : ""}${short ? ' <span class="flag">under the parlay rules</span>' : ""}</div>
       ${body}
     </div>
     <dl class="stub">
@@ -448,132 +451,166 @@ function ticketHTML(b) {
       <div><dt>Payout</dt><dd>${fmtMoney(CONFIG.stake + b.toWin, false)}</dd></div>
       <div><dt>${outcome[0]}</dt><dd class="${b.result === "pending" ? "" : cls(b.profit)}">${outcome[1]}</dd></div>
     </dl>
-    <div class="stamp">${clock} Locked ${fmtWhen(b.posted)}${b.kickoff ? " · " + leadTime(b.posted, b.kickoff) : ""}</div>
+    ${b.posted ? `<div class="stamp">${clock}<span>Locked ${fmtWhen(b.posted)}${b.kickoff ? " · " + leadTime(b.posted, b.kickoff) : ""}</span></div>` : ""}
   </article>`;
 }
-const thisWeek = BETS.filter(b => b.week === current.week);
-document.getElementById("tickets").innerHTML = thisWeek.map(ticketHTML).join("");
-// position the side notches on the dashed line
-requestAnimationFrame(() => document.querySelectorAll(".ticket").forEach(t => {
-  const stub = t.querySelector(".stub");
-  t.style.setProperty("--notch", (t.offsetHeight - stub.offsetTop - 10) + "px");
-}));
+function emptyTicket(who, type) {
+  const note = type === "parlay"
+    ? CONFIG.parlayMinLegs + " legs or more, paying " + fmtOdds(CONFIG.parlayMinOdds) + " or better"
+    : "No favorite heavier than " + fmtOdds(CONFIG.maxFavorite);
+  return `<article class="ticket empty ${who}">
+    ${kindBar(who, type, '<span class="pill open">Not posted</span>')}
+    <div class="top">${lockIcon}<div class="pick">Coming before kickoff</div><div class="game">${note}</div></div>
+    <dl class="stub">
+      <div><dt>Stake</dt><dd>${fmtMoney(CONFIG.stake, false)}</dd></div>
+      <div><dt>Odds</dt><dd>TBD</dd></div>
+      <div><dt>To win</dt><dd>TBD</dd></div>
+    </dl>
+  </article>`;
+}
+const weekStats = k => stats(thisWeek.filter(b => b.who === k));
+document.getElementById("tickets").innerHTML = CONFIG.players.map(p => {
+  const ws = weekStats(p.key);
+  const settled = ws.win + ws.loss + ws.push;
+  const head = `<div class="col-head"><h3>${esc(p.name)}</h3><span class="num ${cls(ws.profit)}">${settled ? "This week " + fmtMoney(ws.profit) : ""}</span></div>`;
+  const slips = ["best", "parlay"].map(t => {
+    const b = thisWeek.find(x => x.who === p.key && x.type === t);
+    return b ? ticketHTML(b) : emptyTicket(p.key, t);
+  }).join("");
+  return `<div class="col ${p.key}">${head}${slips}</div>`;
+}).join("");
 
-/* ---------- Scoreboard ---------- */
-const all = stats(BETS), best = stats(BETS.filter(b => b.type === "best")), par = stats(BETS.filter(b => b.type === "parlay"));
-const settledCount = all.win + all.loss + all.push;
+/* ---------- Head to head ---------- */
+const S = {};
+CONFIG.players.forEach(p => {
+  const mine = BETS.filter(b => b.who === p.key);
+  S[p.key] = { all: stats(mine), best: stats(mine.filter(b => b.type === "best")), parlay: stats(mine.filter(b => b.type === "parlay")) };
+});
 document.getElementById("stakeNote").textContent = "If we put " + fmtMoney(CONFIG.stake, false) + " on every bet";
-const pct = n => (n * 100).toFixed(1) + "%";
-const roiTxt = n => (n > 0 ? "+" : n < 0 ? MINUS : "") + Math.abs(n * 100).toFixed(1) + "%";
-document.getElementById("board").innerHTML = `
-  <div>
-    <h3>Overall</h3>
-    <div class="big ${cls(all.profit)}">${fmtMoney(all.profit)}</div>
-    <p class="caption">${settledCount} bets settled. ${fmtMoney(all.staked, false)} risked, ${fmtMoney(all.staked + all.profit, false)} back.</p>
+const diff = S[p1.key].all.profit - S[p2.key].all.profit;
+const anySettled = CONFIG.players.some(p => { const a = S[p.key].all; return a.win + a.loss + a.push > 0; });
+document.getElementById("leader").innerHTML = !anySettled
+  ? `All square. First bets go on the board Week ${CONFIG.startWeek}.`
+  : diff === 0
+    ? "Dead even on the money"
+    : `<span class="c-${diff > 0 ? p1.key : p2.key}">${esc(diff > 0 ? p1.name : p2.name)}</span> leads by <span class="num">${fmtMoney(Math.abs(diff), false)}</span>`;
+document.getElementById("board").innerHTML = CONFIG.players.map(p => {
+  const s = S[p.key];
+  return `<div class="${p.key}">
+    <h3>${esc(p.name)}</h3>
+    <div class="big ${cls(s.all.profit)}">${fmtMoney(s.all.profit)}</div>
     <dl>
-      <dt>Record</dt><dd>${all.record}</dd>
-      <dt>Win rate</dt><dd>${pct(all.rate)}</dd>
-      <dt>Return on money risked</dt><dd class="${cls(all.roi)}">${roiTxt(all.roi)}</dd>
+      <dt>Overall record</dt><dd>${s.all.record}</dd>
+      <dt>Win rate</dt><dd>${pct(s.all)}</dd>
+      <dt>Return</dt><dd class="${cls(s.all.roi)}">${roiTxt(s.all.roi)}</dd>
     </dl>
-  </div>
-  ${[["Best Bets", best], ["Parlays", par]].map(([n, s]) => `
-  <div>
-    <h3>${n}</h3>
-    <div class="mid">${s.record}</div>
-    <dl>
-      <dt>Win rate</dt><dd>${pct(s.rate)}</dd>
-      <dt>Profit</dt><dd class="${cls(s.profit)}">${fmtMoney(s.profit)}</dd>
-      <dt>Return</dt><dd class="${cls(s.roi)}">${roiTxt(s.roi)}</dd>
-    </dl>
-  </div>`).join("")}`;
+    <div class="split">
+      ${[["Best Bets", s.best], ["Parlays", s.parlay]].map(([t, x]) => `
+      <div><span class="t">${t}</span><span class="num">${x.record}</span><span class="num ${cls(x.profit)}">${fmtMoney(x.profit)}</span></div>`).join("")}
+    </div>
+  </div>`;
+}).join("");
 
 /* ---------- Chart ---------- */
 (function drawChart() {
   const svg = document.getElementById("chart");
-  const settledWeeks = WEEKS.filter(w => BETS.some(b => b.week === w.week && b.result !== "pending"));
-  const series = { combined: [0], best: [0], parlay: [0] };
-  settledWeeks.forEach(w => {
-    const wb = BETS.filter(b => b.week === w.week && b.result !== "pending");
-    const bp = wb.filter(b => b.type === "best").reduce((a, b) => a + b.profit, 0);
-    const pp = wb.filter(b => b.type === "parlay").reduce((a, b) => a + b.profit, 0);
-    series.best.push(series.best.at(-1) + bp);
-    series.parlay.push(series.parlay.at(-1) + pp);
-    series.combined.push(series.combined.at(-1) + bp + pp);
-  });
-  const labels = ["Start"].concat(settledWeeks.map(w => "Wk " + w.week));
+  const css = getComputedStyle(document.documentElement);
+  const col = k => css.getPropertyValue("--" + k).trim();
+  const line = css.getPropertyValue("--line").trim();
+  document.getElementById("legend").innerHTML = CONFIG.players.map(p =>
+    `<span><i style="background:${col(p.key)}"></i>${esc(p.name)}</span>`).join("");
+  const settledWeeks = [...new Set(BETS.filter(b => b.result !== "pending").map(b => b.week))].sort((a, b) => a - b);
   const W = 960, H = 300, L = 64, R = 20, T = 16, B = 32;
-  const vals = [].concat(series.combined, series.best, series.parlay);
+  if (!settledWeeks.length) {
+    svg.setAttribute("viewBox", "0 0 960 160");
+    svg.innerHTML = `<line x1="${L}" x2="${W - R}" y1="80" y2="80" stroke="${line}" stroke-width="1.5"/>
+      <text x="${L - 10}" y="84" text-anchor="end">$0</text>
+      <text class="empty-msg" x="${(W + L) / 2}" y="60" text-anchor="middle">The lines start once Week ${CONFIG.startWeek} is graded.</text>`;
+    return;
+  }
+  const series = {};
+  CONFIG.players.forEach(p => series[p.key] = [0]);
+  settledWeeks.forEach(wk => {
+    CONFIG.players.forEach(p => {
+      const v = BETS.filter(b => b.week === wk && b.who === p.key && b.result !== "pending").reduce((a, b) => a + b.profit, 0);
+      series[p.key].push(series[p.key].at(-1) + v);
+    });
+  });
+  const labels = ["Start"].concat(settledWeeks.map(w => "Wk " + w));
+  const vals = [].concat(...CONFIG.players.map(p => series[p.key]));
   const step = 1000;
   let lo = Math.floor(Math.min(0, ...vals) / step) * step, hi = Math.ceil(Math.max(0, ...vals) / step) * step;
   if (hi === lo) hi = lo + step;
   const n = labels.length;
-  const x = i => L + (n === 1 ? 0 : i * (W - L - R) / (n - 1));
+  const x = i => L + i * (W - L - R) / (n - 1);
   const y = v => T + (hi - v) * (H - T - B) / (hi - lo);
-  const css = getComputedStyle(document.documentElement);
-  const c = { line: css.getPropertyValue("--line").trim(), accent: css.getPropertyValue("--accent").trim(),
-              win: css.getPropertyValue("--win").trim(), pending: css.getPropertyValue("--pending").trim(),
-              muted: css.getPropertyValue("--muted").trim() };
   let g = "";
   for (let v = lo; v <= hi; v += step) {
-    g += `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="${c.line}" stroke-width="${v === 0 ? 1.5 : 1}" ${v === 0 ? "" : 'stroke-dasharray="3 4"'}/>`;
+    g += `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="${line}" stroke-width="${v === 0 ? 1.5 : 1}" ${v === 0 ? "" : 'stroke-dasharray="3 4"'}/>`;
     g += `<text x="${L - 10}" y="${y(v) + 4}" text-anchor="end">${fmtMoney(v)}</text>`;
   }
   labels.forEach((t, i) => { g += `<text x="${x(i)}" y="${H - 8}" text-anchor="middle">${t}</text>`; });
   const path = arr => arr.map((v, i) => (i ? "L" : "M") + x(i).toFixed(1) + " " + y(v).toFixed(1)).join(" ");
-  const area = path(series.combined) + ` L${x(n - 1)} ${y(0)} L${x(0)} ${y(0)} Z`;
-  g += `<path d="${area}" fill="${c.accent}" opacity="0.10"/>`;
-  g += `<path d="${path(series.best)}" fill="none" stroke="${c.win}" stroke-width="2" stroke-linejoin="round"/>`;
-  g += `<path d="${path(series.parlay)}" fill="none" stroke="${c.pending}" stroke-width="2" stroke-linejoin="round"/>`;
-  g += `<path d="${path(series.combined)}" fill="none" stroke="${c.accent}" stroke-width="3" stroke-linejoin="round"/>`;
-  const lx = x(n - 1), ly = y(series.combined.at(-1));
-  g += `<circle cx="${lx}" cy="${ly}" r="5" fill="${c.accent}"/>`;
+  CONFIG.players.forEach(p => {
+    g += `<path d="${path(series[p.key])}" fill="none" stroke="${col(p.key)}" stroke-width="3" stroke-linejoin="round"/>`;
+    g += `<circle cx="${x(n - 1)}" cy="${y(series[p.key].at(-1))}" r="5" fill="${col(p.key)}"/>`;
+  });
   svg.innerHTML = g;
-  document.getElementById("legend").innerHTML =
-    `<span><i style="background:${c.accent}"></i>Overall</span>` +
-    `<span><i style="background:${c.win}"></i>Best Bets</span>` +
-    `<span><i style="background:${c.pending}"></i>Parlays</span>`;
 })();
 
 /* ---------- Rules ---------- */
+function breakEvenText(o) {
+  const a = Math.abs(o), num = o < 0 ? a : 100, den = o < 0 ? a + 100 : o + 100;
+  const g = (x, y) => y ? g(y, x % y) : x;
+  const d = g(num, den), n = num / d, m = den / d;
+  return m <= 10 ? n + " out of every " + m + " bets" : (num / den * 100).toFixed(1) + "% of bets";
+}
 const breakEven = o => o < 0 ? Math.abs(o) / (Math.abs(o) + 100) : 100 / (o + 100);
 document.getElementById("rules").innerHTML = [
-  ["One week, two tickets", "One best bet and one parlay, posted together before the first game."],
-  ["Best bet limit", "No favorite heavier than " + fmtOdds(CONFIG.maxFavorite) + ". At that price we need to win " + pct(breakEven(CONFIG.maxFavorite)) + " to break even."],
-  ["Parlay target", CONFIG.parlayLegs + " legs, aiming near " + fmtOdds(CONFIG.parlayTarget) + "."],
-  ["Flat stake", fmtMoney(CONFIG.stake, false) + " on every ticket, win or lose. No chasing."]
+  ["Head to head", names.join(" and ") + " each post a best bet and a parlay every week. Most money wins the season."],
+  ["Best bet limit", "No favorite heavier than " + fmtOdds(CONFIG.maxFavorite) + ". At that price you need to win " + breakEvenText(CONFIG.maxFavorite) + " to break even."],
+  ["Parlay minimum", "At least " + CONFIG.parlayMinLegs + " legs, and the parlay has to pay " + fmtOdds(CONFIG.parlayMinOdds) + " or better."],
+  ["No insurance", "No parlay insurance or injury protection. If a leg loses, the parlay loses."],
+  ["Flat stake", "The full " + fmtMoney(CONFIG.stake, false) + " on every ticket, every week. Win or lose. No chasing."]
 ].map(([t, d]) => `<div class="rule"><b>${t}</b><span>${d}</span></div>`).join("");
 
 /* ---------- History ---------- */
 let filter = "all";
+const filterDefs = [["all", "All"]].concat(CONFIG.players.map(p => [p.key, p.name]), [["best", "Best Bets"], ["parlay", "Parlays"]]);
+document.getElementById("filters").innerHTML = filterDefs.map(([k, t]) =>
+  `<button type="button" id="f-${k}" data-f="${k}" aria-pressed="${k === "all"}">${esc(t)}</button>`).join("");
 function renderHistory() {
-  const list = BETS.filter(b => filter === "all" || b.type === filter);
+  const list = BETS.filter(b => filter === "all" || b.who === filter || b.type === filter);
   const s = stats(list);
   document.getElementById("histTotals").innerHTML = [
-    ["Record", s.record, ""], ["Win rate", pct(s.rate), ""],
+    ["Record", s.record, ""], ["Win rate", pct(s), ""],
     ["Profit", fmtMoney(s.profit), cls(s.profit)], ["Return", roiTxt(s.roi), cls(s.roi)]
   ].map(([k, v, c]) => `<div class="tile"><dt>${k}</dt><dd class="${c}">${v}</dd></div>`).join("");
-  let run = 0;
-  const rows = list.map(b => {
-    run += b.profit;
-    return { b, run };
-  }).reverse().map(({ b, run }) => {
-    const pick = b.type === "best"
-      ? `${esc(b.pick)}<span class="sub">${esc(b.game)}</span>`
-      : `${b.legs.map(l => esc(l.pick) + " " + fmtOdds(l.odds)).join(" + ")}`;
-    return `<tr>
-      <td class="num">${b.week}</td>
-      <td class="nw">${fmtShortDate(b.posted)}<span class="sub">${parseT(b.posted).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}</span></td>
-      <td class="nw">${b.type === "best" ? "Best Bet" : "Parlay"}</td>
-      <td>${pick}</td>
-      <td class="r num">${fmtOdds(b.odds)}</td>
-      <td><span class="pill ${b.result}">${label[b.result]}</span></td>
-      <td class="r num ${cls(b.profit)}">${b.result === "pending" ? "" : fmtMoney(b.profit)}</td>
-      <td class="r num ${cls(run)}">${fmtMoney(run)}</td>
-    </tr>`;
-  }).join("");
-  document.getElementById("histBody").innerHTML = rows;
-  document.getElementById("histFoot").innerHTML =
-    `<tr><td colspan="6">Totals, ${s.win + s.loss + s.push} settled</td><td class="r num ${cls(s.profit)}">${fmtMoney(s.profit)}</td><td></td></tr>`;
+  if (!list.length) {
+    document.getElementById("histBody").innerHTML =
+      `<tr><td class="empty-row" colspan="8">No bets on the record yet. Week ${CONFIG.startWeek} is the first one.</td></tr>`;
+    document.getElementById("histFoot").innerHTML = "";
+  } else {
+    let run = 0;
+    const rows = list.map(b => { run += b.profit; return { b, run }; }).reverse().map(({ b, run }) => {
+      const pick = b.type === "best"
+        ? `${niceText(b.pick)}<span class="sub">${esc(b.game)}</span>`
+        : `${b.legs.map(l => niceText(l.pick) + " " + fmtOdds(l.odds)).join(" + ")}`;
+      return `<tr>
+        <td class="num">${b.week}</td>
+        <td class="nw">${b.posted ? fmtShortDate(b.posted) + '<span class="sub">' + parseT(b.posted).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }) + "</span>" : ""}</td>
+        <td class="nw"><span class="who c-${b.who}">${esc(NAME[b.who])}</span><span class="sub">${TYPE[b.type]}</span></td>
+        <td>${pick}</td>
+        <td class="r num">${fmtOdds(b.odds)}</td>
+        <td><span class="pill ${b.result}">${label[b.result]}</span></td>
+        <td class="r num ${cls(b.profit)}">${b.result === "pending" ? "" : fmtMoney(b.profit)}</td>
+        <td class="r num ${cls(run)}">${fmtMoney(run)}</td>
+      </tr>`;
+    }).join("");
+    document.getElementById("histBody").innerHTML = rows;
+    document.getElementById("histFoot").innerHTML =
+      `<tr><td colspan="6">Totals, ${s.win + s.loss + s.push} settled</td><td class="r num ${cls(s.profit)}">${fmtMoney(s.profit)}</td><td></td></tr>`;
+  }
   document.querySelectorAll("#filters button").forEach(btn => btn.setAttribute("aria-pressed", btn.dataset.f === filter));
 }
 document.getElementById("filters").addEventListener("click", e => {
