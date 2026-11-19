@@ -301,6 +301,9 @@ const CONFIG = {
    result: "pending", "win", "loss", or "push"
    posted / kickoff: "YYYY-MM-DDTHH:MM" in Eastern time
    Leave out anything that wasn't posted that week.
+   Parlay odds: put the total DraftKings price in "odds" on the parlay.
+   Leg odds are optional. If a leg pushes or is voided, add "paidOdds"
+   with what DraftKings actually paid.
 
    Example of one week:
    { week: 11,
@@ -318,6 +321,23 @@ const CONFIG = {
          { pick: "Over 44.5", game: "Vikings at 49ers", odds: -110, result: "pending" } ] } } },
    ========================================================= */
 const WEEKS = [
+  { week: 11,
+    collin: {
+      best:   { pick: "49ers moneyline", game: "Vikings at 49ers (Mexico City)", odds: -162,
+                posted: "2026-11-18T21:45", kickoff: "2026-11-22T20:20", result: "pending" },
+      parlay: { odds: 348, posted: "2026-11-18T21:41", kickoff: "2026-11-22T13:00", legs: [
+        { pick: "George Pickens 5+ receptions", game: "Titans at Cowboys", result: "pending" },
+        { pick: "Patrick Mahomes 2+ passing TDs", game: "Cardinals at Chiefs", result: "pending" },
+        { pick: "Jonah Coleman 17+ rushing attempts", game: "Raiders at Broncos", result: "pending" }
+      ] } },
+    evan: {
+      best:   { pick: "Luther Burden III 50+ receiving yards", game: "Saints at Bears", odds: -188,
+                posted: "2026-11-18T21:48", kickoff: "2026-11-22T13:00", result: "pending" },
+      parlay: { odds: 312, posted: "2026-11-18T21:48", kickoff: "2026-11-19T20:15", legs: [
+        { pick: "David Montgomery 50+ rushing yards", game: "Colts at Texans (Thursday)", result: "pending" },
+        { pick: "Jaylen Warren over 95.5 rushing + receiving yards", game: "Steelers at Eagles", result: "pending" },
+        { pick: "Kyle Monangai 40+ rushing + receiving yards", game: "Saints at Bears", result: "pending" }
+      ] } } },
 ];
 
 /* =========================================================
@@ -344,7 +364,8 @@ const leadTime = (posted, kickoff) => {
   if (!kickoff || !posted) return "";
   const mins = Math.round((parseT(kickoff) - parseT(posted)) / 60000);
   if (mins <= 0) return "posted after kickoff";
-  const h = Math.floor(mins / 60), m = mins % 60;
+  const d = Math.floor(mins / 1440), h = Math.floor((mins % 1440) / 60), m = mins % 60;
+  if (d) return d + "d " + h + "h before kickoff";
   return (h ? h + "h " : "") + m + "m before kickoff";
 };
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -354,16 +375,19 @@ const TYPE = { best: "Best Bet", parlay: "Parlay" };
 const NAME = {};
 CONFIG.players.forEach(p => NAME[p.key] = p.name);
 
-function parlayInfo(legs) {
+function parlayInfo(legs, given, paid) {
   const live = legs.filter(l => l.result !== "push");
-  const fullDec = legs.reduce((a, l) => a * toDec(l.odds), 1);
-  const liveDec = live.reduce((a, l) => a * toDec(l.odds), 1);
+  const haveLegOdds = legs.every(l => typeof l.odds === "number");
+  const fullDec = given ? toDec(given) : legs.reduce((a, l) => a * toDec(l.odds), 1);
+  let liveDec = fullDec;
+  if (paid) liveDec = toDec(paid);
+  else if (live.length < legs.length && haveLegOdds) liveDec = live.reduce((a, l) => a * toDec(l.odds), 1);
   let result;
   if (legs.some(l => l.result === "loss")) result = "loss";
   else if (legs.some(l => l.result === "pending")) result = "pending";
   else if (live.length === 0) result = "push";
   else result = "win";
-  return { odds: toAm(fullDec), settleDec: live.length ? liveDec : 1, result };
+  return { odds: given || toAm(fullDec), settleDec: live.length ? liveDec : 1, result };
 }
 
 const BETS = [];
@@ -377,7 +401,7 @@ WEEKS.forEach(w => {
                   odds: b.odds, dec: toDec(b.odds), result: b.result });
     }
     if (mine.parlay) {
-      const x = parlayInfo(mine.parlay.legs);
+      const x = parlayInfo(mine.parlay.legs, mine.parlay.odds, mine.parlay.paidOdds);
       BETS.push({ week: w.week, who: p.key, type: "parlay", posted: mine.parlay.posted, kickoff: mine.parlay.kickoff,
                   pick: mine.parlay.legs.length + " leg parlay", legs: mine.parlay.legs,
                   odds: x.odds, dec: x.settleDec, result: x.result });
@@ -437,7 +461,7 @@ function ticketHTML(b) {
   } else {
     body = `<ul class="legs">${b.legs.map(l => {
       const mark = l.result === "win" ? "✓" : l.result === "loss" ? "✕" : l.result === "push" ? "P" : "";
-      return `<li><span class="dot ${l.result}">${mark}</span><span>${niceText(l.pick)}<span class="game">${esc(l.game)}</span></span><span class="num">${fmtOdds(l.odds)}</span></li>`;
+      return `<li><span class="dot ${l.result}">${mark}</span><span>${niceText(l.pick)}<span class="game">${esc(l.game)}</span></span><span class="num">${typeof l.odds === "number" ? fmtOdds(l.odds) : ""}</span></li>`;
     }).join("")}</ul>`;
   }
   const outcome = b.result === "pending" ? ["To win", fmtMoney(b.toWin, false)] : ["Result", fmtMoney(b.profit)];
@@ -596,7 +620,7 @@ function renderHistory() {
     const rows = list.map(b => { run += b.profit; return { b, run }; }).reverse().map(({ b, run }) => {
       const pick = b.type === "best"
         ? `${niceText(b.pick)}<span class="sub">${esc(b.game)}</span>`
-        : `${b.legs.map(l => niceText(l.pick) + " " + fmtOdds(l.odds)).join(" + ")}`;
+        : `${b.legs.map(l => niceText(l.pick) + (typeof l.odds === "number" ? " " + fmtOdds(l.odds) : "")).join(" + ")}`;
       return `<tr>
         <td class="num">${b.week}</td>
         <td class="nw">${b.posted ? fmtShortDate(b.posted) + '<span class="sub">' + parseT(b.posted).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }) + "</span>" : ""}</td>
